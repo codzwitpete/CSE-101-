@@ -8,4 +8,4 @@ SMC CS50 C Programing |
 SMC CS20A Programing in C++ |
 UCSC CSE12 Assembly Language in MIPS |
 UCSC CSEE101 Advancded Programing in C++ & C |
-UCSC CSE130 
+UCSC CSE130 Computer Systems
