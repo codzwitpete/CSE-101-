@@ -1,4 +1,4 @@
-# CSE-101-
+# College Courses -
 UCSC CSE 101 Data Structures and Algorithms 
 
 
