@@ -1,0 +1,177 @@
+import random 
+
+class Monster():
+    def __init__(self, name, hp=20):
+       self.exp = 0
+       self.name = name
+       self.type = 'Normal'
+       self.current_hp = hp
+       self.max_hp = hp
+       self.attacks = {'wait':0}
+       self.possible_attacks = {'sneak_attack':1, 'slash':2, 'ice_storm':3, 'fire_storm':3, 'whirlwind':3, 'earthquake':2, 'double_hit':4, 'tornado':4, 'wait':0}
+       
+    def add_attack(self, attack_name):
+        if attack_name in self.possible_attacks:
+            if attack_name in self.attacks.keys():
+                return False
+            if len(self.attacks.keys()) == 4:
+                self.attacks = {a: b for a, b in sorted(self.attacks.items(), key = lambda item: item[1])}
+                (min_key, min_value), *rest = self.attacks.items()
+                self.attacks.pop(min_key)
+                self.attacks[attack_name] = self.possible_attacks[attack_name]
+                return True
+            else:
+                self.attacks[attack_name] = self.possible_attacks[attack_name]
+                return True
+        else:
+            return False
+   
+    def remove_attack(self, attack_name):
+        if attack_name in self.attacks:
+            self.attacks.pop(attack_name)
+            if len(self.attacks.keys()) == 0:
+               self.attacks = {'wait':0}
+            return True
+        else:
+            return False
+    
+    def win_fight(self):
+        self.exp += 5
+        self.current_hp = self.max_hp
+    
+    def lose_fight(self):
+        self.exp += 1
+        self.current_hp = self.max_hp
+  
+  
+def printMonster(Monster):
+    print("EXP: ", Monster.exp)
+    print(Monster.name)
+    print("HP: ",Monster.current_hp)
+    print("MAX HP: ", Monster.max_hp)
+    print(Monster.attacks.items())
+  
+def monster_fight(monster1, monster2):
+    winner = None
+    round_num = 0
+    err_cnt = 0
+    
+    M1_atks_used = []
+    M2_atks_used = []
+    winner_atk_list = []
+    
+    if (monster1.current_hp == 0 or monster2.current_hp == 0):
+        monster1.current_hp = monster1.max_hp
+        monster2.current_hp = monster2.max_hp
+
+
+    printMonster(monster1)
+    printMonster(monster2)
+
+    if all(key == "wait" for key in monster1.attacks.keys()) and all(key == "wait" for key in monster2.attacks.keys()): 
+        return(-1, None, None)
+        
+    m1_atkset = sorted(monster1.attacks.items(), key=lambda item: item[1], reverse=True)
+    m2_atkset = sorted(monster2.attacks.items(), key=lambda item: item[1], reverse=True)
+    
+    #print("m1_atkset", m1_atkset[0][0])
+    #print("m2_atkset", m2_atkset)
+    
+    M1index = 0
+    M2index = 0
+    
+    while (monster1.current_hp > 0 and monster2.current_hp > 0):
+        
+        # being atk by loading atks
+            # find the weakest atk
+            # do damage 
+            # calc hp 
+        #count round 
+        # determine winner
+        
+        """  Dont need the fill the monsters with atks
+        m1_atkset = []
+        m2_atkset = []
+        
+        for values in range(4):
+            name = random.choice(atk_names)
+            
+            # Never allowed to get the sames atk in the set VERYYY BAD for big O
+            for names in monster1.attacks.keys():
+                if (name == names):
+                        name = random.choice(atk_names)
+        
+            m1_atkset.append(name)
+            monster1.add_attack(name)
+        
+        #print("M1 first print",monster1.attacks.items())  
+
+        
+        for values in range(4):
+            name = random.choice(atk_names)
+            
+            # Never allowed to get the sames atk in the set VERYYY BAD for big O
+            for names in monster2.attacks.keys():
+                if (name == names):
+                        name = random.choice(atk_names)
+                        
+            m2_atkset.append(name)
+            monster2.add_attack(name)
+            
+        #print("M2 first print",monster2.attacks.items())
+        """
+        
+        # begin doing damage  
+        
+        # Monster 1 atks first 
+
+        try:
+            monster2.current_hp -= monster1.attacks[m1_atkset[M1index][0]]
+            M1_atks_used.append(m1_atkset[M1index][0])                     #print(M1_atks_used)
+            M1index += 1
+        except IndexError:
+            M1index = 0
+            err_cnt += 1
+
+              
+        # Monster 2 atks next
+        try: 
+            monster1.current_hp -= monster2.attacks[m2_atkset[M2index][0]]
+            M2_atks_used.append(m2_atkset[M2index][0])                     #print(M2_atks_used)
+            M2index += 1
+        except IndexError:
+            M2index = 0
+
+
+
+        print("Batle Hp m1: ",monster1.current_hp)
+        print("Batle Hp m2: ",monster2.current_hp)
+        
+
+    if (monster2.current_hp <= 0):
+        winner = monster1
+    elif (monster1.current_hp <= 0):
+        winner = monster2
+        
+
+    if (winner == monster1):
+        monster1.win_fight()
+        monster2.lose_fight()
+        winner_atk_list = M1_atks_used
+    else:
+        monster2.win_fight()
+        monster1.lose_fight()
+        winner_atk_list = M2_atks_used
+        
+    print("WINNER: ", winner_atk_list)
+    round_num = len(winner_atk_list)
+    
+    return (round_num, winner, winner_atk_list) 
+
+
+
+#m1 = Monster("ayan")
+m2 = Monster("lucas")
+    
+#monsterwinner = monster_fight(m1, m2)
+#print(monsterwinner)
